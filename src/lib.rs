@@ -1,1 +1,2 @@
-pub mod automaton;
+mod automaton;
+pub use automaton::*;
