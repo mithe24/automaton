@@ -19,6 +19,8 @@
             pkgs.rustfmt
             pkgs.clippy
             pkgs.cargo
+
+            pkgs.graphviz
           ];
         };
       }

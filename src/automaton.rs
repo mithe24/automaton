@@ -176,8 +176,61 @@ impl Automaton {
         );
     }
 
-    pub fn to_graph(&self) {
-        todo!()
+    pub fn to_graph(&self) -> graphviz_rust::dot_structures::Graph {
+        use graphviz_rust::parse;
+
+        let mut dot = String::from("digraph automaton {\n");
+        dot.push_str("  graph[rankdir=LR]\n");
+
+        for state in &self.states {
+            let shape = if self.accepting.contains(state) {
+                "doubleoctagon"
+            } else {
+                "box"
+            };
+
+            dot.push_str(&format!(
+                "  {}[label=\"{}\" shape={}]\n",
+                state.name, state.name, shape
+            ));
+        }
+
+        dot.push_str("  start[shape=none]\n");
+        dot.push_str(&format!("  start -> {}\n", self.initial.name));
+
+        for (source, transitions) in &self.transitions {
+            let mut targets_of_symbols: HashMap<StateRef, HashSet<SymbolRef>> =
+                HashMap::new();
+
+            for (symbol, targets) in transitions {
+                for target in targets {
+                    targets_of_symbols
+                        .entry(target.clone())
+                        .or_default()
+                        .insert(symbol.clone());
+                }
+            }
+
+            for (target, symbols) in targets_of_symbols {
+                let mut symbols: Vec<_> = symbols.into_iter().collect();
+                symbols.sort_by_key(|symbol| symbol.to_string());
+
+                let label = symbols
+                    .iter()
+                    .map(|symbol| symbol.to_string())
+                    .collect::<Vec<_>>()
+                    .join(", ");
+
+                dot.push_str(&format!(
+                    "  {} -> {} [label=\"{}\"]\n",
+                    source.name, target.name, label
+                ));
+            }
+        }
+
+        dot.push_str("}\n");
+
+        parse(&dot).expect("generated automaton DOT should be valid")
     }
 }
 
@@ -267,7 +320,7 @@ impl DFA {
         self.is_accepting(current)
     }
 
-    pub fn to_graph(&self) {
+    pub fn to_graph(&self) -> graphviz_rust::dot_structures::Graph {
         self.automaton.to_graph()
     }
 }
