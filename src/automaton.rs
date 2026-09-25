@@ -63,6 +63,17 @@ pub struct Automaton {
 }
 
 impl Automaton {
+    pub fn default() -> Self {
+        let initial = Rc::new(State::new("q0"));
+        Self {
+            states: vec![initial.clone()],
+            accepting: HashSet::new(),
+            symbols: HashSet::new(),
+            initial,
+            transitions: HashMap::new(),
+        }
+    }
+
     pub fn new(initial_name: impl Into<Rc<str>>) -> Self {
         let initial = Rc::new(State::new(initial_name));
         Self {
