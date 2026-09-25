@@ -30,8 +30,6 @@ pub enum Symbol {
     Symbol(char),
 }
 
-// These are super unidiomatic,
-// but are here to mirror the orginal API more closely
 impl Symbol {
     pub fn epsilon() -> SymbolRef {
         Rc::new(Self::Epsilon)
