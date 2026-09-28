@@ -8,20 +8,20 @@ fn main() {
     automaton.mark_state_accepting(q1.clone()).unwrap();
 
     automaton
-        .add_transition(automaton.initial(), Symbol::char('a'), q1.clone())
+        .add_transition(automaton.initial(), Symbol::from('a'), q1.clone())
         .unwrap();
     automaton
-        .add_transition(automaton.initial(), Symbol::char('b'), q1.clone())
+        .add_transition(automaton.initial(), Symbol::from('b'), q1.clone())
         .unwrap();
 
     automaton
-        .add_transition(automaton.initial(), Symbol::char('a'), q2.clone())
+        .add_transition(automaton.initial(), Symbol::from('a'), q2.clone())
         .unwrap();
     automaton
-        .add_transition(q2.clone(), Symbol::epsilon(), q2.clone())
+        .add_transition(q2.clone(), Symbol::Epsilon, q2.clone())
         .unwrap();
     automaton
-        .add_transition(q2.clone(), Symbol::char('b'), q1.clone())
+        .add_transition(q2.clone(), Symbol::from('b'), q1.clone())
         .unwrap();
 
     let graph = automaton.to_graph();

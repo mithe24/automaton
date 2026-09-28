@@ -37,17 +37,18 @@ pub enum Symbol {
     Symbol(char),
 }
 
-impl Symbol {
-    pub fn epsilon() -> Symbol {
-        Self::Epsilon
+impl Into<char> for Symbol {
+    fn into(self) -> char {
+        match self {
+            Symbol::Epsilon => 'ε',
+            Symbol::Symbol(c) => c,
+        }
     }
+}
 
-    pub fn char(c: char) -> Symbol {
+impl From<char> for Symbol {
+    fn from(c: char) -> Self {
         Self::Symbol(c)
-    }
-
-    pub fn is_epsilon(&self) -> bool {
-        matches!(self, Self::Epsilon)
     }
 }
 
@@ -389,7 +390,7 @@ impl DFA {
             .transitions
             .iter()
             .map(|((source, c), target)| {
-                (source.clone(), Symbol::char(*c), target.clone())
+                (source.clone(), Symbol::from(*c), target.clone())
             })
             .collect();
 
@@ -483,7 +484,7 @@ impl NFA {
         symbol: &Symbol,
     ) -> HashSet<StateRef> {
         debug_assert!(
-            !symbol.is_epsilon(),
+            !matches!(symbol, Symbol::Epsilon),
             "reachable_from is for non-epsilon symbols"
         );
         let targets = self.automaton.reachable_from(sources, symbol);
@@ -508,8 +509,8 @@ impl NFA {
 
         while let Some((subset, dfa_state)) = queue.pop_front() {
             for symbol in &alphabet {
-                let next_subset = self
-                    .reachable_from(subset.iter().cloned(), symbol);
+                let next_subset =
+                    self.reachable_from(subset.iter().cloned(), symbol);
 
                 if next_subset.is_empty() {
                     continue;
@@ -657,11 +658,11 @@ mod tests {
     use super::*;
 
     fn sym(c: char) -> Symbol {
-        Symbol::char(c)
+        Symbol::from(c)
     }
 
     fn eps() -> Symbol {
-        Symbol::epsilon()
+        Symbol::Epsilon
     }
 
     #[test]
