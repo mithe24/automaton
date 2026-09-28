@@ -285,6 +285,12 @@ impl DFA {
         self.automaton.alphabet()
     }
 
+    pub fn all_transitions(
+        &self,
+    ) -> impl Iterator<Item = (StateRef, Symbol, StateRef)> + '_ {
+        self.automaton.all_transitions()
+    }
+
     pub fn is_accepting(&self, state: &StateRef) -> bool {
         self.automaton.is_accepting(state)
     }
@@ -429,6 +435,12 @@ impl NFA {
 
     pub fn alphabet(&self) -> impl Iterator<Item = Symbol> + '_ {
         self.automaton.alphabet()
+    }
+
+    pub fn all_transitions(
+        &self,
+    ) -> impl Iterator<Item = (StateRef, Symbol, StateRef)> + '_ {
+        self.automaton.all_transitions()
     }
 
     pub fn is_accepting(&self, state: &StateRef) -> bool {
