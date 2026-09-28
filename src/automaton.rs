@@ -293,6 +293,10 @@ impl DFA {
         self.automaton.add_state(name)
     }
 
+    pub fn add_fresh_state(&mut self) -> StateRef {
+        self.automaton.add_fresh_state()
+    }
+
     pub fn mark_state_accepting(&mut self, state: StateRef) -> Result<()> {
         self.automaton.mark_state_accepting(state)
     }
@@ -433,6 +437,10 @@ impl NFA {
 
     pub fn add_state(&mut self, name: impl Into<String>) -> Result<StateRef> {
         self.automaton.add_state(name)
+    }
+
+    pub fn add_fresh_state(&mut self) -> StateRef {
+        self.automaton.add_fresh_state()
     }
 
     pub fn mark_state_accepting(&mut self, state: StateRef) -> Result<()> {
